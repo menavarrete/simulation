@@ -98,20 +98,46 @@ class Source:
         pass
 
 
+class Barco:
+
+    def __init__(self, tipo):
+        self.tipo_barco = tipo
+        self.carga = 0
+
+    def llenar_barco(self, carga):
+        self.carga = carga
+
+
 class Puerto:
 
     def __init__(self):
-        pass
+        self.barcos = []
+
+        # Estadisticas
+
+        self.cantidad_barcos = 0
+
+    def llegada_barco(self, barco):
+        self.cantidad_barcos += 1
+        self.barcos.append(barco)
+
+    def salida_barco(self):
+        self.cantidad_barcos -= 1
+        self.barcos.pop(0)
 
 
 class Tren:
 
-    def __init__(self):
-        pass
+    def __init__(self, carga, ruta):
+        self.carga = carga
+        self.ruta = ruta
+        self.tiempo_llegada = 0
 
 
 class CaminoTren:
 
     def __init__(self):
         pass
+
+
 
