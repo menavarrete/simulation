@@ -68,6 +68,7 @@ class Bodega:
 
     def llega_camion(self, camion):
         self.cambia_cobre(camion.carga)
+        camion.carga = 0
         self.camiones_llegaron += 1
 
     def sale_camion(self, camion):
