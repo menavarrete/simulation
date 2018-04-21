@@ -2,6 +2,9 @@
 author = 'menavarrete'
 
 
+#camiones
+truck_capacity = 20
+
 #El Teniente
 teniente_name = "Division El Teniente"
 teniente_n_camiones = 5
