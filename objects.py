@@ -79,6 +79,7 @@ class Bodega:
     def cambia_cobre(self, cantidad):
         self.bodega += cantidad
 
+
     def actualiza_tiempo(self):
         pass
 
