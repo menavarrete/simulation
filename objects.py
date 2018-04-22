@@ -4,10 +4,11 @@ author = 'rtacuna'
 
 class Camion:
 
-    def __init__(self, ruta, carga):
+    def __init__(self, ruta, carga, capacidad):
         self.carga = carga
         self.ruta = ruta
         self.tiempo_llegada = 0
+        self.capacidad = capacidad
 
 
 class Camino:
@@ -87,12 +88,13 @@ class Source:
     def __init__(self, name):
         self.name = name
         self.tiempo_salida = -1
+        self.bodega = 999999999999
 
         # Estadistica
 
         self.camiones_salieron = 0
 
-    def sale_camion(self):
+    def sale_camion(self, camion):
         self.camiones_salieron +=1
 
     def actualiza_tiempo(self):
