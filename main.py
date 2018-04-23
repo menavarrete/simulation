@@ -1,22 +1,20 @@
-
-author = 'menavarrete'
-
-from objects import *
+from objects import Bodega, Source, Sink, Camion, Camino
 from variables import *
 import simpy
 
+author = 'menavarrete-rtacuna'
 
 
 def tramo_vuelta_camion(env, camino, camion, camiones):
     yield env.timeout(camino.tiempo_viaje)
     camiones.append(camion)
-    print "llegada de un camion vacio desde",camino.destino.name, "a", camino.origen.name, "a las ", env.now
+    print("llegada de un camion vacio desde",camino.destino.name, "a", camino.origen.name, "a las ", env.now)
 
 
 def tramo_ida_camion(env, camino, camion, camiones):
     camino.origen.sale_camion(camion)
     yield env.timeout(camino.tiempo_viaje)
-    print "llega camion desde", camino.origen.name, "a", camino.destino.name, "con", camion.carga, "kilos a las ", env.now
+    print("llega camion desde", camino.origen.name, "a", camino.destino.name, "con", camion.carga, "kilos a las ", env.now)
     camino.destino.llega_camion(camion)
     env.process(tramo_vuelta_camion(env, camino, camion, camiones))
 
@@ -27,25 +25,23 @@ def tramo_despacho(env, camino, camiones, between_time, wait_time):
             camion = camiones.pop()
             camion.carga = camion.capacidad
             env.process(tramo_ida_camion(env, camino, camion, camiones))
-            print "Despacho de un camion desde", camino.origen.name, "a", camino.destino.name, "a las ", env.now
+            print("Despacho de un camion desde", camino.origen.name, "a", camino.destino.name, "a las ", env.now)
             yield env.timeout(between_time)
         else:
             if len(camiones) < 1:
-                print "No hay camiones disponibles en", camino.origen.name, "para ruta", camino.name
+                print("No hay camiones disponibles en", camino.origen.name, "para ruta", camino.name)
             elif camino.origen.bodega < truck_capacity:
-                print "No hay suficiente materia prima en", camino.origen.name, "para ruta", camino.name
+                print("No hay suficiente materia prima en", camino.origen.name, "para ruta", camino.name)
             else:
-                print "No hay camiones disponibles y no hay suficiente materia prima en", camino.origen.name, "para ruta", camino.name
+                print("No hay camiones disponibles y no hay suficiente materia prima en", camino.origen.name, "para ruta", camino.name)
             yield env.timeout(wait_time)
 
 
 def produccion(env, bodega, cantidad, time):
     while True:
         bodega.cambia_cobre(cantidad)
-        print "Entrada de produccion de cobre en", bodega.name
+        print("Entrada de produccion de cobre en", bodega.name)
         yield env.timeout(time)
-
-
 
 
 #entidades
