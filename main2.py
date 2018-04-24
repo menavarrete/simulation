@@ -28,7 +28,7 @@ def carga(env, camino, camion):
 
 def tramo_despacho_5(env, camino, between_time, file):
     while True:
-        if camino.proyeccion(env.now) >= truck_capacity:
+        if camino.proyection(env.now) >= truck_capacity:
             camion = Camion(camino, 0, truck_capacity)
             env.process(carga(env, camino, camion))
             env.process(tramo_ida_camion(env, camino, camion, [], file))
@@ -42,7 +42,7 @@ def tramo_despacho_5(env, camino, between_time, file):
 
 def tramo_despacho(env, camino, camiones, between_time, file):
     while True:
-        if len(camiones) > 0 and camino.origen.bodega >= truck_capacity and camino.proyeccion(env.now) >= truck_capacity:
+        if len(camiones) > 0 and camino.origen.bodega >= truck_capacity and camino.proyection(env.now) >= truck_capacity:
             camion = camiones.pop()
             env.process(carga(env, camino, camion))
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
@@ -61,6 +61,7 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             yield env.timeout(between_time)
 
 
+
 if __name__ == '__main__':
 
     anos = 8
@@ -71,7 +72,7 @@ if __name__ == '__main__':
     teniente_source = Source(teniente_name)
     ventanas = Sink(ventanas_name)
     saladillo_bodega = Bodega(saladillo_bodega1_name, saladillo_bodega1_capacity)
-    saladillo_bodega.bodega = 939000
+    #saladillo_bodega.bodega = 7168000
 
     # Tramos
     tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_proyeccion)
@@ -90,6 +91,7 @@ if __name__ == '__main__':
     env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
     env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
     env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
+    env.process(saladillo_bodega.produccion(env, saladillo_entradas))
     env.run(until=T)
 
     # Resumen

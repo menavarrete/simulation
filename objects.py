@@ -23,7 +23,7 @@ class Camino:
         self.tiempo_viaje = tiempo_viaje
         self.origen = origen
         self.destino = destino
-        self.proyection = proyeccion
+        self.proyeccion = proyeccion
 
         # Estadisticas
 
@@ -33,12 +33,12 @@ class Camino:
         self.numero_camiones_no_salieron += 1
 
     def cambio_proyeccion(self, proyeccion, time):
-        index = time // 8760
-        self.proyection[index] += proyeccion
+        index = int(time // 8760)
+        self.proyeccion[index] += proyeccion
 
-    def proyeccion(self, time):
-        index = time // 8760
-        return self.proyection[index]
+    def proyection(self, time):
+        index = int(time // 8760)
+        return self.proyeccion[index]
 
 
 class Sink:
@@ -78,6 +78,13 @@ class Bodega:
 
     def cambia_cobre(self, cantidad):
         self.bodega += cantidad
+
+    def produccion(self, env, cantidades):
+        while True:
+            index = int(env.now // 8760)
+            q = cantidades[index]
+            self.cambia_cobre(float(q/17520))
+            yield env.timeout(0.5)
 
 
 class Source:
