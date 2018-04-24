@@ -105,9 +105,10 @@ class Source:
 
 class Barco:
 
-    def __init__(self, tipo):
-        self.tipo_barco = tipo
+    def __init__(self, capacidad, tipo):
+        self.capacidad = capacidad
         self.carga = 0
+        self.tipo = tipo
 
     def llenar_barco(self, carga):
         self.carga = carga
