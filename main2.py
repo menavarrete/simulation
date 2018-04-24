@@ -3,6 +3,8 @@ from variables import *
 import simpy
 import random
 
+
+
 author = 'menavarrete-rtacuna'
 
 
@@ -61,6 +63,12 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             camino.no_salieron()
             yield env.timeout(between_time)
 
+def despacho_camiones_tramo2(env, camino, camiones, file):
+    while True:
+        if camino.origen.bodega >= 7500 and len(camiones) > 0:
+            camion = camiones.pop()
+            env.process(tramo_ida_camion(env, camino, camion, camiones, file))
+        yield env.timeout(tramo2_between_time)
 
 #esta funcion simula cuando se despacha un tren desde saladillo
 def bodega_descontar(env, camino, quantity, file):
@@ -76,43 +84,49 @@ def despacho_trenes(env, camino, quantity_out, quantity_in, file):
 
 
 def tramo_trenes(env, camino, file):
-    quantity_out = 720
-    quantity_in = 1440
-    #ciclo while con exactamente 24 horas, con tal de controlar el dia a dia
     while True:
-        #generador de uniforme 0,1
-        aleatorio = random.random()
+        aleatorio = random.uniform(0,1)
         #caso de 1 tren
         if aleatorio <= 0.05:
             yield env.timeout(12)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_out, file))
+            quantity = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity, quantity, file))
             yield env.timeout(12)
         #caso de 2 trenes
         elif aleatorio <= 0.25:
             yield env.timeout(6)
-            env.process(bodega_descontar(env, camino, quantity_out, file))
+            quantity1 = min(max(0, camino.origen.bodega), 740)
+            env.process(bodega_descontar(env, camino, quantity1, file))
             yield env.timeout(8)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            quantity2 = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity2, quantity1 + quantity2, file))
             yield env.timeout(10)
         #caso de 3 trenes
         elif aleatorio <= 0.7:
             yield env.timeout(6)
-            env.process(bodega_descontar(env, camino, quantity_out, file))
+            quantity1 = min(max(0, camino.origen.bodega), 740)
+            env.process(bodega_descontar(env, camino, quantity1, file))
             yield env.timeout(4)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            quantity2 = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity1, quantity1 + quantity2, file))
             yield env.timeout(4)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_out, file))
+            quantity3 = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity3, quantity3, file))
             yield env.timeout(10)
         #caso de 4 trenes
         else:
             yield env.timeout(6)
-            env.process(bodega_descontar(env, camino, quantity_out, file))
+            quantity1 = min(max(0, camino.origen.bodega), 740)
+            env.process(bodega_descontar(env, camino, quantity1, file))
             yield env.timeout(4)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            quantity2 = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity2, quantity1 + quantity2, file))
             yield env.timeout(4)
-            env.process(bodega_descontar(env, camino, quantity_out, file))
+            quantity3 = min(max(0, camino.origen.bodega), 740)
+            env.process(bodega_descontar(env, camino, quantity3, file))
             yield env.timeout(4)
-            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            quantity4 = min(max(0, camino.origen.bodega), 740)
+            env.process(despacho_trenes(env, camino, quantity4, quantity3 + quantity4, file))
             yield env.timeout(6)
 
 
@@ -129,16 +143,20 @@ if __name__ == '__main__':
     ventanas = Sink(ventanas_name)
     saladillo_bodega = Bodega(saladillo_bodega1_name, saladillo_bodega1_capacity)
     #saladillo_bodega.bodega = 7168000
+    potrerillos = Sink(potrerillos_name)
 
     # Tramos
     tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_proyeccion)
     tramo4 = Camino(tramo4_name, tramo4_travel_time, andina_bodega, ventanas, tramo4_proyeccion)
     tramo1 = Camino(tramo1_name, tramo1_travel_time, saladillo_bodega, ventanas, tramo1_proyecion)
     tramo2 = Camino(tramo2_name, tramo2_travel_time, saladillo_bodega, andina_bodega, tramo2_proyeccion)
+    tramo3 = Camino(tramo3_name, tramo3_travel_time, saladillo_bodega, potrerillos, tramo3_proyeccion)
 
     # Camiones
     t4_camiones = [Camion(tramo4, 0, truck_capacity) for i in range(tramo4_camiones)]
     t1_camiones = [Camion(tramo1, 0, truck_capacity) for i in range(tramo1_camiones)]
+    t2_camiones = [Camion(tramo2, 0, truck_capacity) for i in range(tramo2_camiones)]
+    t3_camiones = [Camion(tramo2, 0, truck_capacity) for i in range(tramo3_camiones)]
 
     # Archivo
     file = open('Resumen1.txt', 'w')
@@ -148,8 +166,10 @@ if __name__ == '__main__':
     env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
     env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
     env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
+    env.process(tramo_despacho(env, tramo3, t3_camiones, tramo3_between_time, file))
     env.process(tramo_trenes(env, tramo2, file))
     env.process(saladillo_bodega.produccion(env, saladillo_entradas))
+    env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
     env.run(until=T)
 
     # Resumen
@@ -174,4 +194,6 @@ if __name__ == '__main__':
     print("-" * 20)
     print("T1 termina con carga proyeccion: ", tramo1.proyeccion)
     print("T1 termina con camiones que NO salieron: ", tramo1.numero_camiones_no_salieron)
-
+    print("-" * 20)
+    print("T3 termina con carga proyeccion: ", tramo3.proyeccion)
+    print("T3 termina con camiones que NO salieron: ", tramo3.numero_camiones_no_salieron)

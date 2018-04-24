@@ -91,10 +91,12 @@ class Source:
 
     def __init__(self, name):
         self.name = name
+        self.bodega = 999999
         # Estadistica
 
         self.camiones_salieron = 0
         self.cobre_llegado = 0
+
 
     def sale_camion(self, camion):
         self.camiones_salieron += 1
