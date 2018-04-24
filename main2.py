@@ -1,6 +1,7 @@
 from objects import Bodega, Source, Sink, Camion, Camino
 from variables import *
 import simpy
+import random
 
 author = 'menavarrete-rtacuna'
 
@@ -61,6 +62,61 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             yield env.timeout(between_time)
 
 
+#esta funcion simula cuando se despacha un tren desde saladillo
+def bodega_descontar(env, camino, quantity, file):
+    camino.origen.cambia_cobre(- quantity)
+    yield env.timeout(0)
+
+
+#esta funcion simula el despacho desde saladillo hasta andina, considerando que no hay variabilidad en los tramos de tren
+def despacho_trenes(env, camino, quantity_out, quantity_in, file):
+    camino.origen.cambia_cobre(- quantity_out)
+    yield env.timeout(24)
+    camino.destino.cambia_cobre(quantity_in)
+
+
+def tramo_trenes(env, camino, file):
+    quantity_out = 720
+    quantity_in = 1440
+    #ciclo while con exactamente 24 horas, con tal de controlar el dia a dia
+    while True:
+        #generador de uniforme 0,1
+        aleatorio = random.random()
+        #caso de 1 tren
+        if aleatorio <= 0.05:
+            yield env.timeout(12)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_out, file))
+            yield env.timeout(12)
+        #caso de 2 trenes
+        elif aleatorio <= 0.25:
+            yield env.timeout(6)
+            env.process(bodega_descontar(env, camino, quantity_out, file))
+            yield env.timeout(8)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            yield env.timeout(10)
+        #caso de 3 trenes
+        elif aleatorio <= 0.7:
+            yield env.timeout(6)
+            env.process(bodega_descontar(env, camino, quantity_out, file))
+            yield env.timeout(4)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            yield env.timeout(4)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_out, file))
+            yield env.timeout(10)
+        #caso de 4 trenes
+        else:
+            yield env.timeout(6)
+            env.process(bodega_descontar(env, camino, quantity_out, file))
+            yield env.timeout(4)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            yield env.timeout(4)
+            env.process(bodega_descontar(env, camino, quantity_out, file))
+            yield env.timeout(4)
+            env.process(despacho_trenes(env, camino, quantity_out, quantity_in, file))
+            yield env.timeout(6)
+
+
+
 
 if __name__ == '__main__':
 
@@ -78,6 +134,7 @@ if __name__ == '__main__':
     tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_proyeccion)
     tramo4 = Camino(tramo4_name, tramo4_travel_time, andina_bodega, ventanas, tramo4_proyeccion)
     tramo1 = Camino(tramo1_name, tramo1_travel_time, saladillo_bodega, ventanas, tramo1_proyecion)
+    tramo2 = Camino(tramo2_name, tramo2_travel_time, saladillo_bodega, andina_bodega, tramo2_proyeccion)
 
     # Camiones
     t4_camiones = [Camion(tramo4, 0, truck_capacity) for i in range(tramo4_camiones)]
@@ -91,6 +148,7 @@ if __name__ == '__main__':
     env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
     env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
     env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
+    env.process(tramo_trenes(env, tramo2, file))
     env.process(saladillo_bodega.produccion(env, saladillo_entradas))
     env.run(until=T)
 

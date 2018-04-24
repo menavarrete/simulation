@@ -57,6 +57,7 @@ tramo3_name = "tramo 3 (Saladillo - Potrerillos)"
 #tramo 2
 tramo2_travel_time = 2.5
 tramo2_name = "tramo 2 (Saladillo - Division Andina)"
+tramo2_proyeccion = [757000, 853000, 912000, 595000, 560000, 480000, 600000, 600000]
 
 #tramo 1
 tramo1_travel_time = 3.2
