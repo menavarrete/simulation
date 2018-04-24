@@ -39,6 +39,7 @@ potrerillos_n_camiones = 5
 tramo5_travel_time = 3
 tramo5_name = "Tramo 5 (El Teniente - Division Andina)"
 tramo5_between_time = 1
+tramo5_proyeccion = [221000, 202000, 200000, 174000, 115000, 0, 0, 0]
 
 
 #tramo 4
@@ -46,6 +47,7 @@ tramo4_travel_time = 1
 tramo4_name = "tramo 4 (Division Andina - Fundicion Ventanas)"
 tramo4_camiones = 6
 tramo4_between_time = 1
+tramo4_proyeccion = [73000, 73000, 73000, 73000, 73000, 73000, 73000, 73000]
 
 #tramo 3
 tramo3_travel_time = 4.5
@@ -60,3 +62,6 @@ tramo1_travel_time = 3.2
 tramo1_name = "tramo 3 (Saladillo - Fundicion Ventanas)"
 tramo1_camiones = 6
 tramo1_between_time = 1
+tramo1_proyecion = [46000, 81000, 32000, 276000, 276000, 276000, 276000, 276000]
+
+

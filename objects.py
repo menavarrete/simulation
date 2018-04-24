@@ -23,7 +23,7 @@ class Camino:
         self.tiempo_viaje = tiempo_viaje
         self.origen = origen
         self.destino = destino
-        self.proyeccion = proyeccion
+        self.proyection = proyeccion
 
         # Estadisticas
 
@@ -32,8 +32,13 @@ class Camino:
     def no_salieron(self):
         self.numero_camiones_no_salieron += 1
 
-    def cambio_proyeccion(self, proyeccion):
-        self.proyeccion += proyeccion
+    def cambio_proyeccion(self, proyeccion, time):
+        index = time // 8760
+        self.proyection[index] += proyeccion
+
+    def proyeccion(self, time):
+        index = time // 8760
+        return self.proyection[index]
 
 
 class Sink:
