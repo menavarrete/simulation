@@ -79,13 +79,6 @@ class Bodega:
     def cambia_cobre(self, cantidad):
         self.bodega += cantidad
 
-    def produccion(self, env, cantidades):
-        while True:
-            index = int(env.now // 8760)
-            q = cantidades[index]
-            self.cambia_cobre(float(q/17520))
-            yield env.timeout(0.5)
-
 
 class Source:
 

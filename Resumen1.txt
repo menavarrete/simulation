@@ -1,5 +1,3 @@
-LLega 3 tren en el tiempo 0
-LLega 3 tren en el tiempo 24
-LLega 4 tren en el tiempo 48
-LLega 3 tren en el tiempo 72
-LLega 3 tren en el tiempo 96
+----------- Cambio de ano ----------- 0
+----------- Cambio de ano ----------- 8760
+----------- Cambio de ano ----------- 17520

@@ -1,6 +1,7 @@
 from objects import Bodega, Source, Sink, Camion, Camino, Puerto
 from puerto import barcos_angloamerica, programacion_mensual
 from despacho_trenes import tramo_trenes
+from produccion import produccion_saladillo
 from variables import *
 import simpy
 import random
@@ -109,8 +110,10 @@ if __name__ == '__main__':
     env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
     env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
     env.process(tramo_despacho(env, tramo3, t3_camiones, tramo3_between_time, file))
-    env.process(saladillo_bodega.produccion(env, saladillo_entradas))
     env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
+
+    # Produccion
+    env.process(produccion_saladillo(env, saladillo_bodega, file))
 
     # Trenes
     env.process(tramo_trenes(env, tramo2, file))
