@@ -84,43 +84,37 @@ if __name__ == '__main__':
     teniente_source = Source(teniente_name)
     ventanas = Sink(ventanas_name)
     saladillo_bodega = Bodega(saladillo_bodega1_name, saladillo_bodega1_capacity)
-    #saladillo_bodega.bodega = 7168000
-    potrerillos = Sink(potrerillos_name)
     puerto = Puerto()
 
     # Tramos
     tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_proyeccion)
     tramo4 = Camino(tramo4_name, tramo4_travel_time, andina_bodega, ventanas, tramo4_proyeccion)
-    tramo1 = Camino(tramo1_name, tramo1_travel_time, saladillo_bodega, ventanas, tramo1_proyecion)
     tramo2 = Camino(tramo2_name, tramo2_travel_time, saladillo_bodega, andina_bodega, tramo2_proyeccion)
-    tramo3 = Camino(tramo3_name, tramo3_travel_time, saladillo_bodega, potrerillos, tramo3_proyeccion)
 
     # Camiones
     t4_camiones = [Camion(tramo4, 0, truck_capacity) for i in range(tramo4_camiones)]
-    t1_camiones = [Camion(tramo1, 0, truck_capacity) for i in range(tramo1_camiones)]
     t2_camiones = [Camion(tramo2, 0, truck_capacity) for i in range(tramo2_camiones)]
-    t3_camiones = [Camion(tramo2, 0, truck_capacity) for i in range(tramo3_camiones)]
 
     # Archivo
     file = open('Resumen1.txt', 'w')
 
     # Simulacion
     env = simpy.Environment()
-    env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
-    env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
-    env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
-    env.process(tramo_despacho(env, tramo3, t3_camiones, tramo3_between_time, file))
-    env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
 
     # Produccion
     env.process(produccion_saladillo(env, saladillo_bodega, file))
 
-    # Trenes
-    env.process(tramo_trenes(env, tramo2, file))
-
     # Puerto
     env.process(barcos_angloamerica(env, puerto, andina_bodega, file))
     env.process(programacion_mensual(env, puerto, andina_bodega, file))
+
+    # Tramo
+    env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
+    env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
+
+    # Tramo 2
+    env.process(tramo_trenes(env, tramo2, file))
+    env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
 
     env.run(until=T)
 
@@ -143,9 +137,4 @@ if __name__ == '__main__':
     print("-" * 20)
     print("T4 termina con carga proyeccion: ", tramo4.proyeccion)
     print("T4 termina con camiones que NO salieron: ", tramo4.numero_camiones_no_salieron)
-    print("-" * 20)
-    print("T1 termina con carga proyeccion: ", tramo1.proyeccion)
-    print("T1 termina con camiones que NO salieron: ", tramo1.numero_camiones_no_salieron)
-    print("-" * 20)
-    print("T3 termina con carga proyeccion: ", tramo3.proyeccion)
-    print("T3 termina con camiones que NO salieron: ", tramo3.numero_camiones_no_salieron)
+

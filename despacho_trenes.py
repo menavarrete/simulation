@@ -17,7 +17,6 @@ def despacho_trenes(env, camino, quantity_out, quantity_in):
 def tramo_trenes(env, camino, file):
     while True:
         aleatorio = uniform(0, 1)
-        print(aleatorio)
         if aleatorio <= 0.05:
             file.write("LLega 1 tren en el tiempo {}\n".format(env.now))
             yield env.timeout(12)
