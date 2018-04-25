@@ -111,7 +111,7 @@ class Barco:
         self.tipo = tipo
 
     def llenar_barco(self, carga):
-        self.carga = carga
+        self.carga += carga
 
 
 class Puerto:
