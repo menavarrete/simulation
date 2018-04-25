@@ -1,5 +1,6 @@
 from objects import Bodega, Source, Sink, Camion, Camino, Puerto
 from puerto import barcos_angloamerica, programacion_mensual
+from despacho_trenes import tramo_trenes
 from variables import *
 import simpy
 import random
@@ -71,65 +72,6 @@ def despacho_camiones_tramo2(env, camino, camiones, file):
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
         yield env.timeout(tramo2_between_time)
 
-#esta funcion simula cuando se despacha un tren desde saladillo
-def bodega_descontar(env, camino, quantity, file):
-    camino.origen.cambia_cobre(- quantity)
-    yield env.timeout(0)
-
-
-#esta funcion simula el despacho desde saladillo hasta andina, considerando que no hay variabilidad en los tramos de tren
-def despacho_trenes(env, camino, quantity_out, quantity_in, file):
-    camino.origen.cambia_cobre(- quantity_out)
-    yield env.timeout(24)
-    camino.destino.cambia_cobre(quantity_in)
-
-
-def tramo_trenes(env, camino, file):
-    while True:
-        aleatorio = random.uniform(0,1)
-        #caso de 1 tren
-        if aleatorio <= 0.05:
-            yield env.timeout(12)
-            quantity = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity, quantity, file))
-            yield env.timeout(12)
-        #caso de 2 trenes
-        elif aleatorio <= 0.25:
-            yield env.timeout(6)
-            quantity1 = min(max(0, camino.origen.bodega), 740)
-            env.process(bodega_descontar(env, camino, quantity1, file))
-            yield env.timeout(8)
-            quantity2 = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity2, quantity1 + quantity2, file))
-            yield env.timeout(10)
-        #caso de 3 trenes
-        elif aleatorio <= 0.7:
-            yield env.timeout(6)
-            quantity1 = min(max(0, camino.origen.bodega), 740)
-            env.process(bodega_descontar(env, camino, quantity1, file))
-            yield env.timeout(4)
-            quantity2 = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity1, quantity1 + quantity2, file))
-            yield env.timeout(4)
-            quantity3 = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity3, quantity3, file))
-            yield env.timeout(10)
-        #caso de 4 trenes
-        else:
-            yield env.timeout(6)
-            quantity1 = min(max(0, camino.origen.bodega), 740)
-            env.process(bodega_descontar(env, camino, quantity1, file))
-            yield env.timeout(4)
-            quantity2 = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity2, quantity1 + quantity2, file))
-            yield env.timeout(4)
-            quantity3 = min(max(0, camino.origen.bodega), 740)
-            env.process(bodega_descontar(env, camino, quantity3, file))
-            yield env.timeout(4)
-            quantity4 = min(max(0, camino.origen.bodega), 740)
-            env.process(despacho_trenes(env, camino, quantity4, quantity3 + quantity4, file))
-            yield env.timeout(6)
-
 
 if __name__ == '__main__':
 
@@ -167,9 +109,11 @@ if __name__ == '__main__':
     env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
     env.process(tramo_despacho(env, tramo1, t1_camiones, tramo1_between_time, file))
     env.process(tramo_despacho(env, tramo3, t3_camiones, tramo3_between_time, file))
-    env.process(tramo_trenes(env, tramo2, file))
     env.process(saladillo_bodega.produccion(env, saladillo_entradas))
     env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
+
+    # Trenes
+    env.process(tramo_trenes(env, tramo2, file))
 
     # Puerto
     env.process(barcos_angloamerica(env, puerto, andina_bodega, file))
