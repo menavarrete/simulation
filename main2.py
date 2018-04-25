@@ -63,6 +63,7 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             camino.no_salieron()
             yield env.timeout(between_time)
 
+
 def despacho_camiones_tramo2(env, camino, camiones, file):
     while True:
         if camino.origen.bodega >= 7500 and len(camiones) > 0:

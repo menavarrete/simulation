@@ -22,7 +22,7 @@ def barco_codelco(capacidad):
 
 def carga_barco(env, puerto, bodega, file):
     while True:
-        carga = min(7000, puerto.barcos[0].capacidad - puerto.barcos[0].carga)
+        carga = min(7000, puerto.barcos[0].capacidad - puerto.barcos[0].carga, bodega.bodega)
         if bodega.bodega > carga and puerto.barcos[0].tipo == 1:
             bodega.cambia_cobre(-carga)
         yield env.timeout(int((carga/7000)*24))

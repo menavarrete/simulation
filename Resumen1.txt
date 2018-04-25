@@ -1,18 +1,5 @@
-Llego un barco al puerto en el tiempo 69.16113165984086
-Llego un barco de ANgloamerica al puerto en el tiempo 84
-Sale barco del puerto cargado con su maxima capacidad 181.16113165984086
-Llego un barco de ANgloamerica al puerto en el tiempo 220
-Llego un barco al puerto en el tiempo 250.13438559430818
-Llego un barco de ANgloamerica al puerto en el tiempo 271
-Sale barco del puerto cargado con su maxima capacidad 290.16113165984086
-Sale barco del puerto cargado con su maxima capacidad 399.16113165984086
-Llego un barco de ANgloamerica al puerto en el tiempo 423
-Sale barco del puerto cargado con su maxima capacidad 511.16113165984086
-Llego un barco al puerto en el tiempo 535.0207563770684
-Sale barco del puerto cargado con su maxima capacidad 620.1611316598409
-Llego un barco de ANgloamerica al puerto en el tiempo 650
-Sale barco del puerto cargado con su maxima capacidad 729.1611316598409
-Sale barco del puerto cargado con su maxima capacidad 841.1611316598409
-Llego un barco de ANgloamerica al puerto en el tiempo 935
-Sale barco del puerto cargado con su maxima capacidad 950.1611316598409
-Llego un barco al puerto en el tiempo 963.2525586688898
+LLega 3 tren en el tiempo 0
+LLega 3 tren en el tiempo 24
+LLega 4 tren en el tiempo 48
+LLega 3 tren en el tiempo 72
+LLega 3 tren en el tiempo 96
