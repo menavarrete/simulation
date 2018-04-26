@@ -44,7 +44,7 @@ def llega_barco(env, puerto, bodega, type, capacidad, file):
     puerto.llegada_barco(barco)
     if bodega.bodega < 0:
         puerto.salida_barco()
-        file.write("Barco se fue porque no hay producción en Bodega Andina {} \n".format(env.now))
+        file.write("Barco se fue porque no hay produccion en Bodega Andina {} \n".format(env.now))
     else:
         if len(puerto.barcos) == 1:
             env.process(carga_barco(env, puerto, bodega, file))

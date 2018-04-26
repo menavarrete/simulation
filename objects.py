@@ -77,6 +77,8 @@ class Bodega:
         self.camiones_salieron += 1
 
     def cambia_cobre(self, cantidad):
+        if self.name == "Bodega principal Saladillo":
+            print("CAMBIA COBRE {}, {}".format(cantidad, self.bodega))
         self.bodega += cantidad
 
 
@@ -137,5 +139,3 @@ class CaminoTren:
 
     def __init__(self):
         pass
-
-

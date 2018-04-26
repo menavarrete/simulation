@@ -2,6 +2,7 @@ from objects import Bodega, Source, Sink, Camion, Camino, Puerto
 from puerto import barcos_angloamerica, programacion_mensual
 from despacho_trenes import tramo_trenes
 from produccion import produccion_saladillo
+from estadistica import Estadistica
 from variables import *
 import simpy
 import random
@@ -68,15 +69,16 @@ def tramo_despacho(env, camino, camiones, between_time, file):
 
 def despacho_camiones_tramo2(env, camino, camiones, file):
     while True:
-        if camino.origen.bodega >= 7500 and len(camiones) > 0:
+        if camino.origen.bodega >= 6500 and len(camiones) > 0:
             camion = camiones.pop()
+            camion.carga_camion(28)
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
         yield env.timeout(tramo2_between_time)
 
 
 if __name__ == '__main__':
 
-    anos = 8
+    anos = 1
     T = 8760 * anos
 
     # Entidades
@@ -98,11 +100,14 @@ if __name__ == '__main__':
     # Archivo
     file = open('Resumen1.txt', 'w')
 
+    # Estadisticas
+    estadistica = Estadistica()
+
     # Simulacion
     env = simpy.Environment()
 
     # Produccion
-    env.process(produccion_saladillo(env, saladillo_bodega, file))
+    env.process(produccion_saladillo(env, saladillo_bodega, andina_bodega, estadistica, file))
 
     # Puerto
     env.process(barcos_angloamerica(env, puerto, andina_bodega, file))
@@ -138,3 +143,5 @@ if __name__ == '__main__':
     print("T4 termina con carga proyeccion: ", tramo4.proyeccion)
     print("T4 termina con camiones que NO salieron: ", tramo4.numero_camiones_no_salieron)
 
+    for n in estadistica.bodega_saladillo:
+        print(n)
