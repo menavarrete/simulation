@@ -24,6 +24,7 @@ class Camino:
         self.origen = origen
         self.destino = destino
         self.proyeccion = proyeccion
+        self.proyeccion_diario = 0
 
         # Estadisticas
 

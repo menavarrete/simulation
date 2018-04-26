@@ -67,6 +67,18 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             yield env.timeout(between_time)
 
 
+def tramo_despacho_4(env, camino, camiones, between_time, file):
+    while True:
+        if len(camiones) > 0 and camino.origen.bodega >= truck_capacity \
+                and camino.proyection(env.now) >= truck_capacity and camino.proyeccion_diario >= 28:
+            camion = camiones.pop()
+            env.process(carga(env, camino, camion))
+            env.process(tramo_ida_camion(env, camino, camion, camiones, file))
+            file.write("Despacho de un camion desde {} a {} a las {}\n".format(camino.origen.name, camino.destino.name, env.now))
+            camino.proyeccion_diario -= truck_capacity
+        yield env.timeout(between_time)
+
+
 def despacho_camiones_tramo2(env, camino, camiones, estadistica, file):
     while True:
         if camino.origen.bodega >= 7500 and len(camiones) > 0:
@@ -108,7 +120,7 @@ if __name__ == '__main__':
     env = simpy.Environment()
 
     # Produccion
-    env.process(produccion_saladillo(env, saladillo_bodega, andina_bodega, estadistica, file))
+    env.process(produccion_saladillo(env, saladillo_bodega, andina_bodega, tramo4, estadistica, file))
 
     # Puerto
     env.process(barcos_angloamerica(env, puerto, andina_bodega, file))
@@ -116,7 +128,7 @@ if __name__ == '__main__':
 
     # Tramo
     env.process(tramo_despacho_5(env, tramo5, tramo5_between_time, file))
-    env.process(tramo_despacho(env, tramo4, t4_camiones, tramo4_between_time, file))
+    env.process(tramo_despacho_4(env, tramo4, t4_camiones, tramo4_between_time, file))
 
     # Tramo 2
     env.process(tramo_trenes(env, tramo2, file))
@@ -144,14 +156,17 @@ if __name__ == '__main__':
     print("T4 termina con carga proyeccion: ", tramo4.proyeccion)
     print("T4 termina con camiones que NO salieron: ", tramo4.numero_camiones_no_salieron)
 
-    for n in estadistica.bodega_saladillo:
-        print(n)
 
-    print("-"*20)
-
-    for n in estadistica.bodega_andina:
-        print(n)
-
+    '''
+        for n in estadistica.bodega_saladillo:
+            print(n)
+    
+        print("-"*20)
+    
+        for n in estadistica.bodega_andina:
+            print(n)
+    
+    '''
     print("-"*20)
 
     print(estadistica.error_bodega)
