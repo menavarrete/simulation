@@ -75,15 +75,15 @@ def tramo_despacho_4(env, camino, camiones, between_time, file):
             env.process(carga(env, camino, camion))
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
             file.write("Despacho de un camion desde {} a {} a las {}\n".format(camino.origen.name, camino.destino.name, env.now))
-            camino.proyeccion_diario -= truck_capacity
         yield env.timeout(between_time)
 
 
 def despacho_camiones_tramo2(env, camino, camiones, estadistica, file):
     while True:
-        if camino.origen.bodega >= 7500 and len(camiones) > 0:
+        if camino.origen.bodega >= 5500 and len(camiones) > 0:
             camion = camiones.pop()
             camion.carga_camion(28)
+            camino.cambio_proyeccion(-truck_capacity, env.now)
             estadistica.tramo2()
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
         yield env.timeout(tramo2_between_time)
@@ -91,7 +91,7 @@ def despacho_camiones_tramo2(env, camino, camiones, estadistica, file):
 
 if __name__ == '__main__':
 
-    anos = 1
+    anos = 8
     T = 8760 * anos
 
     # Entidades
@@ -155,7 +155,8 @@ if __name__ == '__main__':
     print("-" * 20)
     print("T4 termina con carga proyeccion: ", tramo4.proyeccion)
     print("T4 termina con camiones que NO salieron: ", tramo4.numero_camiones_no_salieron)
-
+    print("-" * 20)
+    print("T2 termina con carga proyeccion: ", tramo2.proyeccion)
 
     '''
         for n in estadistica.bodega_saladillo:

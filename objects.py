@@ -25,6 +25,7 @@ class Camino:
         self.destino = destino
         self.proyeccion = proyeccion
         self.proyeccion_diario = 0
+        self.proyeccion_diaria = [i / 365 for i in proyeccion]
 
         # Estadisticas
 
@@ -40,6 +41,15 @@ class Camino:
     def proyection(self, time):
         index = int(time // 8760)
         return self.proyeccion[index]
+
+    def proyection_per_day(self, time):
+        index = int(time//8760)
+        day = int(time//24)
+        proyeccion_remanente = self.proyeccion[index]
+        dias = int(365 - (day % 365))
+        deberia_quedar = self.proyeccion_diaria[index] * dias
+        #print(proyeccion_remanente, deberia_quedar)
+        return max(proyeccion_remanente - deberia_quedar, 0)
 
 
 class Sink:
@@ -78,8 +88,8 @@ class Bodega:
         self.camiones_salieron += 1
 
     def cambia_cobre(self, cantidad):
-        if self.name == "Bodega Division Andina":
-            print("CAMBIA COBRE {}, {}".format(cantidad, self.bodega))
+        #if self.name == "Bodega Division Andina":
+        #    print("CAMBIA COBRE {}, {}".format(cantidad, self.bodega))
         self.bodega += cantidad
 
 
