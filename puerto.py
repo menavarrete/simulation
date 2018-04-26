@@ -54,6 +54,7 @@ def programacion_barcos(env, dia, puerto, bodega, capacidad, file):
     retraso = uniform(0, 3)
     wait_time = 24 * (dia + retraso)
     yield env.timeout(wait_time)
+    print("LLEGO UN BARCO -------------------------->")
     file.write("Llego un barco al puerto en el tiempo {}\n".format(env.now))
     env.process(llega_barco(env, puerto, bodega, 1, capacidad, file))
 
@@ -91,6 +92,8 @@ def programacion_mensual(env, puerto, bodega, file):
     programacion = {1: [10], 2: [1, 15], 3: [1, 10, 20], 4: [1, 7, 14, 21], 5: [1, 5, 10, 15, 20]}
     while True:
         caps = calculando_capacidades(bodega.bodega)
+        print("*"*30)
+        print(caps)
         if len(caps) > 0:
             capacidad = min(len(caps), 5)
             posicion = 0

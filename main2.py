@@ -67,11 +67,12 @@ def tramo_despacho(env, camino, camiones, between_time, file):
             yield env.timeout(between_time)
 
 
-def despacho_camiones_tramo2(env, camino, camiones, file):
+def despacho_camiones_tramo2(env, camino, camiones, estadistica, file):
     while True:
-        if camino.origen.bodega >= 6500 and len(camiones) > 0:
+        if camino.origen.bodega >= 7500 and len(camiones) > 0:
             camion = camiones.pop()
             camion.carga_camion(28)
+            estadistica.tramo2()
             env.process(tramo_ida_camion(env, camino, camion, camiones, file))
         yield env.timeout(tramo2_between_time)
 
@@ -119,7 +120,7 @@ if __name__ == '__main__':
 
     # Tramo 2
     env.process(tramo_trenes(env, tramo2, file))
-    env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, file))
+    env.process(despacho_camiones_tramo2(env, tramo2, t2_camiones, estadistica, file))
 
     env.run(until=T)
 
@@ -145,3 +146,13 @@ if __name__ == '__main__':
 
     for n in estadistica.bodega_saladillo:
         print(n)
+
+    print("-"*20)
+
+    for n in estadistica.bodega_andina:
+        print(n)
+
+    print("-"*20)
+
+    print(estadistica.error_bodega)
+    print(estadistica.camiones_t2)

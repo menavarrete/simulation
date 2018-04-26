@@ -11,4 +11,5 @@ def produccion_saladillo(env, bodega, bodega2, est, file):
             index += 1
         carga = produccion[index]
         bodega.cambia_cobre(int(carga))
+        est.calculo_error(bodega.bodega)
         yield env.timeout(24)
