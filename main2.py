@@ -120,7 +120,7 @@ if __name__ == '__main__':
     env = simpy.Environment()
 
     # Produccion
-    env.process(produccion_saladillo(env, saladillo_bodega, andina_bodega, tramo4, estadistica, file))
+    env.process(produccion_saladillo(env, saladillo_bodega, andina_bodega, tramo4, puerto ,estadistica, file))
 
     # Puerto
     env.process(barcos_angloamerica(env, puerto, andina_bodega, file))

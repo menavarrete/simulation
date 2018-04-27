@@ -47,7 +47,6 @@ class Camino:
         day = int(time//24)
         proyeccion_remanente = self.proyeccion[index]
         dias = int(365 - (day % 365))
-        print(dias)
         deberia_quedar = self.proyeccion_diaria[index] * (dias - 1)
         return max(proyeccion_remanente - deberia_quedar, 0)
 
@@ -103,7 +102,6 @@ class Source:
 
         self.camiones_salieron = 0
         self.cobre_llegado = 0
-
 
     def sale_camion(self, camion):
         self.camiones_salieron += 1

@@ -6,6 +6,7 @@ class Estadistica:
         self.bodega_andina = []
         self.camiones_t2 = 0
         self.error_bodega = 0
+        self.barcos_puerto = []
 
     def nuevo_dia(self, saladillo, andina):
         self.bodega_saladillo.append(saladillo)
@@ -28,3 +29,6 @@ class Estadistica:
         file2 = open('bodega_andina.csv', 'w')
         for i in self.bodega_andina:
             file2.write(str(i) + '\n')
+        file3 = open('puerto.csv', 'w')
+        for i in self.barcos_puerto:
+            file3.write(str(i) + '\n')
