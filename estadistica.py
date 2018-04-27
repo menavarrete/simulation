@@ -20,3 +20,11 @@ class Estadistica:
 
     def termine_simulacion(self):
         resultados = ""
+
+    def bodega_csv(self):
+        file = open('bodega_saladillo.csv', 'w')
+        for i in self.bodega_saladillo:
+            file.write(str(i) + '\n')
+        file2 = open('bodega_andina.csv', 'w')
+        for i in self.bodega_andina:
+            file2.write(str(i) + '\n')

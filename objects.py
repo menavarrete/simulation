@@ -47,8 +47,8 @@ class Camino:
         day = int(time//24)
         proyeccion_remanente = self.proyeccion[index]
         dias = int(365 - (day % 365))
-        deberia_quedar = self.proyeccion_diaria[index] * dias
-        #print(proyeccion_remanente, deberia_quedar)
+        print(dias)
+        deberia_quedar = self.proyeccion_diaria[index] * (dias - 1)
         return max(proyeccion_remanente - deberia_quedar, 0)
 
 
@@ -73,6 +73,7 @@ class Bodega:
         self.name = name
         self.bodega = 0
         self.capacidad = capacidad
+        self.file = open('saladilo.txt', 'w')
 
         # Estadisticas
 
@@ -88,8 +89,8 @@ class Bodega:
         self.camiones_salieron += 1
 
     def cambia_cobre(self, cantidad):
-        #if self.name == "Bodega Division Andina":
-        #    print("CAMBIA COBRE {}, {}".format(cantidad, self.bodega))
+        if self.name == "Bodega principal Saladillo":
+            self.file.write("CAMBIA COBRE {}, {}\n".format(cantidad, self.bodega))
         self.bodega += cantidad
 
 

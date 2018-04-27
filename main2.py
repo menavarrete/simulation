@@ -80,7 +80,7 @@ def tramo_despacho_4(env, camino, camiones, between_time, file):
 
 def despacho_camiones_tramo2(env, camino, camiones, estadistica, file):
     while True:
-        if camino.origen.bodega >= 5500 and len(camiones) > 0:
+        if camino.origen.bodega >= 7500 and len(camiones) > 0 and camino.proyection(env.now) > 0:
             camion = camiones.pop()
             camion.carga_camion(28)
             camino.cambio_proyeccion(-truck_capacity, env.now)
@@ -172,3 +172,4 @@ if __name__ == '__main__':
 
     print(estadistica.error_bodega)
     print(estadistica.camiones_t2)
+    estadistica.bodega_csv()
