@@ -2,13 +2,12 @@
 author = 'menavarrete'
 
 
-#Fundicion ventanas
+# Fundicion ventanas
 ventanas_name = "Fundicion Ventanas"
 
 
-#camiones
+# Camiones
 truck_capacity = 28
-
 
 #El Teniente
 teniente_name = "Division El Teniente"
@@ -34,39 +33,20 @@ saladillo_n_camiones = 8
 potrerillos_name = "Fundicion Potrerillos (Division El Salvador)"
 potrerillos_n_camiones = 5
 
-#tramo 5
+
+# Tramo 5
 tramo5_travel_time = 3
 tramo5_name = "Tramo 5 (El Teniente - Division Andina)"
-tramo5_between_time = 1
-tramo5_proyeccion = [221000, 202000, 200000, 174000, 115000, 0, 0, 0]
+tramo5_camiones = [3, 3, 3, 3, 3, 3, 3, 3]
 
 
-#tramo 4
-tramo4_travel_time = 2
+# Tramo 4
+tramo4_travel_time = 1
 tramo4_name = "tramo 4 (Division Andina - Fundicion Ventanas)"
-tramo4_camiones = 2
-tramo4_between_time = 1
-tramo4_proyeccion = [73000, 73000, 73000, 73000, 73000, 73000, 73000, 73000]
+tramo4_camiones = [8, 8, 8, 8, 8, 8, 8, 8]
 
-#tramo 3
-tramo3_travel_time = 15
-tramo3_name = "tramo 3 (Saladillo - Potrerillos)"
-tramo3_proyeccion = [136000, 136000, 0, 0, 0, 0, 0, 0]
-tramo3_between_time = 0.5
-tramo3_camiones = 20
 
-#tramo 2
-tramo2_travel_time = 2
+# tTamo 2
+tramo2_travel_time = 3
 tramo2_name = "tramo 2 (Saladillo - Division Andina)"
-tramo2_proyeccion = [757000, 853000, 912000, 595000, 560000, 480000, 600000, 600000]
-tramo2_camiones = 41
-tramo2_between_time = 0.5
-
-#tramo 1
-tramo1_travel_time = 2.3
-tramo1_name = "tramo 3 (Saladillo - Fundicion Ventanas)"
-tramo1_camiones = 28
-tramo1_between_time = 0.5
-tramo1_proyecion = [46000, 81000, 32000, 276000, 276000, 276000, 276000, 276000]
-
-
+tramo2_camiones = [37, 34, 38, 4, 4, 4, 4, 4]

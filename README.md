@@ -5,3 +5,9 @@
 Para ejecutar esta simulación es necesario tener intalado Python en su versión 3.6 y la librería Simpy.
 
 Para instalar Simpy, ejecutar 'pip install simpy' desde Terminal o Powershell según sistema operativo.
+
+## Miembros equipo.
+- Javiera Prado
+- Diego Gallardo
+- Martin Navarrete
+- René Acuña

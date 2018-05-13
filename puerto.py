@@ -20,7 +20,7 @@ def barco_codelco(capacidad):
     return barco
 
 
-def carga_barco(env, puerto, bodega, file):
+def carga_barco(env, puerto, bodega):
     while True:
         carga = min(7000, puerto.barcos[0].capacidad - puerto.barcos[0].carga, bodega.bodega)
         if bodega.bodega > carga and puerto.barcos[0].tipo == 1:
@@ -30,12 +30,11 @@ def carga_barco(env, puerto, bodega, file):
         puerto.barcos[0].llenar_barco(carga)
         if puerto.barcos[0].carga == puerto.barcos[0].capacidad:
             puerto.salida_barco()
-            file.write("Sale barco del puerto cargado con su maxima capacidad {}\n".format(env.now))
             if len(puerto.barcos) == 0:
                 break
 
 
-def llega_barco(env, puerto, bodega, type, capacidad, file):
+def llega_barco(env, puerto, bodega, type, capacidad):
     yield env.timeout(0)
     if type == 1:
         barco = barco_codelco(capacidad)
@@ -44,27 +43,23 @@ def llega_barco(env, puerto, bodega, type, capacidad, file):
     puerto.llegada_barco(barco)
     if bodega.bodega < 0:
         puerto.salida_barco()
-        file.write("Barco se fue porque no hay produccion en Bodega Andina {} \n".format(env.now))
     else:
         if len(puerto.barcos) == 1:
-            env.process(carga_barco(env, puerto, bodega, file))
+            env.process(carga_barco(env, puerto, bodega))
 
 
-def programacion_barcos(env, dia, puerto, bodega, capacidad, file):
+def programacion_barcos(env, dia, puerto, bodega, capacidad):
     retraso = uniform(0, 3)
     wait_time = 24 * (dia + retraso)
     yield env.timeout(wait_time)
-    #print("LLEGO UN BARCO -------------------------->")
-    file.write("Llego un barco al puerto en el tiempo {}\n".format(env.now))
-    env.process(llega_barco(env, puerto, bodega, 1, capacidad, file))
+    env.process(llega_barco(env, puerto, bodega, 1, capacidad))
 
 
-def barcos_angloamerica(env, puerto, bodega, file):
+def barcos_angloamerica(env, puerto, bodega):
     while True:
         espera = int(expovariate(0.00416))
         yield env.timeout(espera)
-        file.write("Llego un barco de Angloamerica al puerto en el tiempo {}\n".format(env.now))
-        env.process(llega_barco(env, puerto, bodega, 2, 0, file))
+        env.process(llega_barco(env, puerto, bodega, 2, 0))
 
 
 def calculando_capacidades(bodega):
@@ -88,16 +83,14 @@ def calculando_capacidades(bodega):
     return caps
 
 
-def programacion_mensual(env, puerto, bodega, file):
+def programacion_mensual(env, puerto, bodega):
     programacion = {1: [10], 2: [1, 15], 3: [1, 10, 20], 4: [1, 7, 14, 21], 5: [1, 5, 10, 15, 20]}
     while True:
         caps = calculando_capacidades(bodega.bodega)
-        #print("*"*30)
-        #print(caps)
         if len(caps) > 0:
             capacidad = min(len(caps), 5)
             posicion = 0
             for n in programacion[capacidad]:
-                env.process(programacion_barcos(env, n, puerto, bodega, caps[posicion], file))
+                env.process(programacion_barcos(env, n, puerto, bodega, caps[posicion]))
                 posicion += 1
         yield env.timeout(720)
