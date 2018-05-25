@@ -1,12 +1,6 @@
-import simpy
 
 
-def ejemplo(env):
-    while True:
-        print("Evento en el tiempo {}".format(env.now))
-        yield env.timeout(24)
+a = 12.74
+b = round(a, 0)
 
-
-env = simpy.Environment()
-env.process(ejemplo(env))
-env.run(until=100)
+print(int(b))

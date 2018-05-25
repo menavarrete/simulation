@@ -1,0 +1,2 @@
+ANOS: 8
+REPLICAS: 1

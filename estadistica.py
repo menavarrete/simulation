@@ -35,6 +35,10 @@ class Estadistica:
         self.bodega_saladillo_hora.append(saladillo)
         self.bodega_andina_hora.append(andina)
 
+    def nuevo_dia_dos(self, andina, saladillo):
+        self.bodega_andina.append(andina)
+        self.bodega_saladillo.append(saladillo)
+
     def tramo2(self):
         self.camiones_t2 += 1
 
