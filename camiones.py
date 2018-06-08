@@ -45,6 +45,7 @@ def nuevo_tramo2(env, tramo, carga, est):
     if imaginario > 7500:
         diferencia = imaginario - 7500
         camiones = int(diferencia/truck_capacity) + 1
+        camiones = min(camiones, tramo.camiones)
         est.usando_camiones(camiones)
         carga = camiones*truck_capacity
         tramo.origen.cambia_cobre(-carga)

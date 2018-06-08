@@ -1,6 +1,4 @@
+from random import expovariate
 
-
-a = 12.74
-b = round(a, 0)
-
-print(int(b))
+for n in range(10):
+    print(expovariate(0.00416)/24)

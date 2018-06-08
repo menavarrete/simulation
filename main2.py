@@ -48,7 +48,7 @@ def simulacion():
         env.process(produccion_saladillo_horaria(env, saladillo_bodega, tramo2, andina_bodega, tramo5, estadistica))
 
         # Puerto
-        env.process(barcos_angloamerica(env, puerto, andina_bodega))
+        # env.process(barcos_angloamerica(env, puerto, andina_bodega))
         env.process(programacion_mensual(env, puerto, andina_bodega))
         env.process(carga_barco(env, puerto, andina_bodega))
 
@@ -64,13 +64,21 @@ def simulacion():
         env.run(until=T)
 
         rep.fin_replica(estadistica.bodega_andina, estadistica.bodega_saladillo, estadistica.barcos_puerto, estadistica.camiones_t2)
+        #print("tramo5", tramo5.traslado)
+        #print("tramo5", tramo5.traslado_anual)
+        #print("tramo4", tramo4.traslado)
+        #print("bodega", andina_bodega.bodega)
+        #print("bodega2", saladillo_bodega.bodega)
+        #print("tramo2", tramo2.traslado)
+        #print("puerto_sacado", puerto.sacado)
+        #print("puerto_embarque", puerto.total_necesidad_embarque)
 
     rep.end()
 
     largo = 0
     suma = 0
     for n in rep.bodega_andina_fin:
-        print(int(n))
+        # print(int(n))
         suma += n
         largo += 1
     print(suma/largo)

@@ -5,12 +5,14 @@ from camiones import nuevo_tramo2
 # Esta funcion simula cuando se despacha un tren desde saladillo
 def bodega_descontar(env, camino, quantity):
     camino.origen.cambia_cobre(- quantity)
+    camino.traslado += quantity
     yield env.timeout(0)
 
 
 # Esta funcion simula el despacho desde saladillo hasta andina
 def despacho_trenes(env, camino, quantity_out, quantity_in):
     camino.origen.cambia_cobre(- quantity_out)
+    camino.traslado += quantity_out
     yield env.timeout(24)
     camino.destino.cambia_cobre(quantity_in)
 

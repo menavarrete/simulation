@@ -1,5 +1,6 @@
 from random import uniform, shuffle, expovariate
 from objects import Barco
+from variables import programacion
 
 
 def tipo_barco():
@@ -24,17 +25,24 @@ def carga_barco(env, puerto, bodega):
     while True:
         if len(puerto.barcos) > 0:
             if puerto.barcos[0].tipo == 1:
-                carga = min(7000, puerto.barcos[0].capacidad - puerto.barcos[0].carga, bodega.bodega,
+                carga = min(7000-puerto.carga_diaria, puerto.barcos[0].capacidad - puerto.barcos[0].carga, bodega.bodega,
                             puerto.necesidad_embarco - puerto.carga_actual)
+                puerto.cargando_barco(carga)
                 bodega.cambia_cobre(-carga)
-                puerto.carga_actual += carga
             else:
-                carga = min(7000, puerto.barcos[0].capacidad - puerto.barcos[0].carga)
+                carga = min(7000-puerto.carga_diaria, puerto.barcos[0].capacidad - puerto.barcos[0].carga)
+                puerto.carga_diaria += carga
 
-            puerto.barcos[0].llenar_barco(carga)
+            tiempo = puerto.calculo_tiempo(carga)
             if puerto.barcos[0].carga == puerto.barcos[0].capacidad or puerto.carga_actual >= puerto.necesidad_embarco:
+                print("SALIENDO BARCO ", puerto.barcos[0].carga)
                 puerto.salida_barco()
-            yield env.timeout(24)
+
+            if carga == bodega.bodega or tiempo == 0:
+                nuevo_tiempo = max(1, puerto.tiempo)
+                yield env.timeout(nuevo_tiempo)
+            else:
+                yield env.timeout(tiempo)
         else:
             yield env.timeout(24)
 
@@ -45,8 +53,10 @@ def llega_barco(env, puerto, bodega, type, capacidad):
         barco = barco_codelco(capacidad)
     else:
         barco = tipo_barco()
+    print("LLEGA-BARCO")
     puerto.llegada_barco(barco)
     if bodega.bodega == 0 and type == 1:
+        # print("CACACACACA")
         puerto.salida_barco()
 
 
@@ -67,7 +77,7 @@ def barcos_angloamerica(env, puerto, bodega):
 def calculo_bodega(index):
     if index == 0:
         return uniform(0.6, 0.7)
-    elif index == 12:
+    elif index == 11:
         return uniform(1.3, 1.4)
     else:
         return uniform(0.9, 1.1)
@@ -78,9 +88,10 @@ def calculando_capacidades(anual, index, puerto):
     ea = [905, 982, 1039, 696, 602, 407, 527, 527]
 
     caps = []
-    auxiliar = puerto.necesidad_embarco - puerto.carga_actual
+    auxiliar = max(0, puerto.necesidad_embarco - puerto.carga_actual)
     uniforme = calculo_bodega(index)
     bodega = int((ea[anual] * 1000 * uniforme)/12)
+    puerto.total_necesidad_embarque += bodega
     puerto.necesidad_embarco = bodega
     puerto.carga_actual = 0
 
@@ -104,6 +115,8 @@ def calculando_capacidades(anual, index, puerto):
 
     puerto.necesidad_embarco += auxiliar
 
+    print(caps)
+
     return caps
 
 
@@ -113,13 +126,14 @@ def programacion_mensual(env, puerto, bodega):
     index = 0
     anual = 0
 
-    programacion = {1: [10], 2: [1, 15], 3: [1, 10, 20], 4: [1, 7, 14, 21], 5: [1, 5, 10, 15, 20]}
     while True:
         caps = calculando_capacidades(anual, index, puerto)
         if len(caps) > 0:
             capacidad = min(len(caps), 5)
+            print(capacidad)
             posicion = 0
             for n in programacion[capacidad]:
+                print(n)
                 env.process(programacion_barcos(env, n, puerto, bodega, caps[posicion]))
                 posicion += 1
         yield env.timeout(meses[index])

@@ -13,6 +13,13 @@ class Camino:
         self.dia = 0
         self.traslado = 0
         self.maximo_diario = diario
+        self.traslado_anual = []
+
+    def cambio_anual(self, camiones, maximo_diario):
+        self.traslado_anual.append(self.traslado)
+        self.traslado = 0
+        self.camiones = camiones
+        self.maximo_diario = maximo_diario
 
 
 class Sink:
@@ -45,6 +52,7 @@ class Bodega:
     def cambia_anual(self, anual):
         self.anual = anual
 
+
 class Source:
 
     def __init__(self, name):
@@ -75,18 +83,29 @@ class Puerto:
         self.barcos = []
         self.necesidad_embarco = 0
         self.carga_actual = 0
+        self.sacado = 0
+        self.total_necesidad_embarque = 0
 
-        # Estadisticas
-
-        self.cantidad_barcos = 0
+        # Carga diaria
+        self.carga_diaria = 0
+        self.tiempo = 24
 
     def llegada_barco(self, barco):
-        self.cantidad_barcos += 1
         self.barcos.append(barco)
 
     def salida_barco(self):
-        self.cantidad_barcos -= 1
         self.barcos.pop(0)
+
+    def cargando_barco(self, carga):
+        self.sacado += carga
+        self.carga_diaria += carga
+        self.carga_actual += carga
+
+    def calculo_tiempo(self, carga):
+        tiempo = int((carga / 7000) * 24)
+        self.tiempo -= tiempo
+        self.barcos[0].llenar_barco(carga)
+        return tiempo
 
 
 class Tren:

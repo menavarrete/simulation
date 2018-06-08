@@ -16,6 +16,7 @@ class Replicas:
         self.camiones = []
         self.camiones_fin = []
         self.name = name
+        self.file3 = open('resultados/' + self.name + '/resultados.txt', 'w')
 
     def fin_replica(self, andina, saladillo, puerto, camiones):
         self.bodega_andina.append(andina)
@@ -55,6 +56,25 @@ class Replicas:
                 suma += a[n]
             self.camiones_fin.append(suma/len(self.camiones))
 
+    def calculo_percentil(self):
+        nueva_lista = []
+        suma = 0
+        file = open('resultados/'+self.name+'/bodega_andina_percetnil.csv', 'w')
+        for n in self.bodega_andina:
+            nueva_lista += n
+            indice = self.bodega_andina.index(n)
+            n = sorted(n)
+            suma += n[2890]
+            file.write(str(indice)+","+str(n[2890])+"\n")
+            print(str(indice)+","+str(n[2890]))
+        nueva_lista = sorted(nueva_lista)
+        indice = int(0.99*len(nueva_lista))
+        file.write("Total,"+str(nueva_lista[indice]))
+        self.file3.write("PERCENTIL DATOS JUNTOS: " + str(nueva_lista[indice]) + '\n')
+        self.file3.write("PERCENTIL PROMEDIO REPLICAS: " + str(suma/len(self.bodega_andina)) + '\n')
+        print("Total,"+str(nueva_lista[indice]))
+        print("Total2", suma/len(self.bodega_andina))
+
     def visualizacion(self):
         if not os.path.exists("resultados/"+self.name):
             os.makedirs("resultados/"+self.name)
@@ -75,9 +95,10 @@ class Replicas:
         for i in self.camiones_fin:
             file6.write(str(i) + '\n')
 
-        file3 = open('resultados/'+self.name+'/variables.txt', 'w')
-        file3.write("ANOS: "+str(anos) + '\n')
-        file3.write("REPLICAS: "+str(replicas) + '\n')
+        self.file3.write("ANOS: "+str(anos) + '\n')
+        self.file3.write("REPLICAS: "+str(replicas) + '\n')
+        self.file3.write("CARACTERISTICAS: " + str(caracteristicas) + '\n')
+        self.file3.write("PROGRAMACION BARCOS: " + str(programacion) + '\n')
 
     def end(self):
         self.promedio_andina()
@@ -85,3 +106,4 @@ class Replicas:
         self.promedio_barcos()
         self.promedio_camiones()
         self.visualizacion()
+        self.calculo_percentil()
