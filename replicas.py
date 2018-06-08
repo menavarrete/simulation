@@ -16,7 +16,7 @@ class Replicas:
         self.camiones = []
         self.camiones_fin = []
         self.name = name
-        self.file3 = open('resultados/' + self.name + '/resultados.txt', 'w')
+        self.file3 = ""
 
     def fin_replica(self, andina, saladillo, puerto, camiones):
         self.bodega_andina.append(andina)
@@ -95,6 +95,7 @@ class Replicas:
         for i in self.camiones_fin:
             file6.write(str(i) + '\n')
 
+        self.file3 = open('resultados/' + self.name + '/resultados.txt', 'w')
         self.file3.write("ANOS: "+str(anos) + '\n')
         self.file3.write("REPLICAS: "+str(replicas) + '\n')
         self.file3.write("CARACTERISTICAS: " + str(caracteristicas) + '\n')

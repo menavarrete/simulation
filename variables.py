@@ -2,14 +2,14 @@
 author = 'menavarrete-rtacuna'
 
 # Caracteristicas simulacion
-name = "Test"
-caracteristicas = "Esto es una prueba"
+name = "Version_definitiva"
+caracteristicas = "Version final de la simulacion"
 
 # Tiempo simulacion
 anos = 8
 
 # Replicas
-replicas = 1
+replicas = 100
 
 # Fundicion ventanas
 ventanas_name = "Fundicion Ventanas"
@@ -68,3 +68,7 @@ produccion = [2074, 2348, 2498.6, 1630.1, 1534.3, 1315.1, 1643.83, 1643.83]
 
 # Programacion de barcos
 programacion = {1: [12], 2: [1, 13], 3: [1, 14, 20], 4: [1, 10, 20, 25], 5: [1, 7, 14, 21, 25]}
+programacion2 = {1: [12], 2: [10, 22], 3: [1, 16, 25], 4: [1, 10, 22, 25], 5: [1, 8, 16, 24, 25]}
+
+# Necesidad de embarque anual
+ea = [905, 982, 1039, 696, 602, 407, 527, 527]

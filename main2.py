@@ -33,7 +33,7 @@ def simulacion():
         saladillo_bodega = Bodega(saladillo_bodega1_name, saladillo_bodega1_capacity)
         puerto = Puerto()
 
-        andina_bodega.bodega = 10000
+        # andina_bodega.bodega = 10000
 
         # Tramos
         tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_camiones[0], tramo5_proyeccion[0])
@@ -48,7 +48,7 @@ def simulacion():
         env.process(produccion_saladillo_horaria(env, saladillo_bodega, tramo2, andina_bodega, tramo5, estadistica))
 
         # Puerto
-        # env.process(barcos_angloamerica(env, puerto, andina_bodega))
+        env.process(barcos_angloamerica(env, puerto, andina_bodega))
         env.process(programacion_mensual(env, puerto, andina_bodega))
         env.process(carga_barco(env, puerto, andina_bodega))
 

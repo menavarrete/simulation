@@ -9,10 +9,11 @@ def produccion_saladillo(env, bodega, bodega2, puerto, tramo2, est):
 
         # Barcos en el puerto diario
         est.barcos_puerto.append(len(puerto.barcos))
-        print(int(env.now/24),end="-")
-        for n in puerto.barcos:
-            print(n.capacidad, end="")
-        print()
+        #print(int(env.now/24),end="-")
+        #for n in puerto.barcos:
+        #    print(n.capacidad, end="")
+        #print("-"+str(puerto.angloamerica)+"-"+str(len(puerto.barcos)), end="")
+        #print()
 
         # Estadisticas calculo de error en bodega
         est.calculo_error(bodega.bodega)

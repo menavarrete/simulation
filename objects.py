@@ -90,11 +90,21 @@ class Puerto:
         self.carga_diaria = 0
         self.tiempo = 24
 
+        # Tipo programacion
+        self.programcion = 0
+
+        # Angloamerica
+        self.angloamerica = 0
+
     def llegada_barco(self, barco):
         self.barcos.append(barco)
+        if barco.tipo == 2:
+            self.angloamerica += 1
 
     def salida_barco(self):
-        self.barcos.pop(0)
+        barco = self.barcos.pop(0)
+        if barco.tipo == 2:
+            self.angloamerica -= 1
 
     def cargando_barco(self, carga):
         self.sacado += carga
