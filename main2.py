@@ -1,4 +1,4 @@
-from objects import Bodega, Source, Sink, Camino, Puerto
+from objects import Bodega, Source, Sink, Camino, Puerto, Embarque
 from puerto import barcos_angloamerica, programacion_mensual, carga_barco
 from despacho_trenes import tramo_trenes
 from produccion import produccion_saladillo, produccion_saladillo_horaria
@@ -33,6 +33,10 @@ def simulacion():
         saladillo_bodega = Bodega(saladillo_bodega1_name, saladillo_bodega1_capacity)
         puerto = Puerto()
 
+        for n in puntos_de_carga:
+            carga = Embarque(n)
+            puerto.puntos_carga.append(carga)
+
         # andina_bodega.bodega = 10000
 
         # Tramos
@@ -50,7 +54,9 @@ def simulacion():
         # Puerto
         env.process(barcos_angloamerica(env, puerto, andina_bodega))
         env.process(programacion_mensual(env, puerto, andina_bodega))
-        env.process(carga_barco(env, puerto, andina_bodega))
+
+        for embarque in puerto.puntos_carga:
+            env.process(carga_barco(env, puerto, andina_bodega, embarque))
 
         # Tramo 5
         env.process(despacho_camiones(env, tramo5))
@@ -63,7 +69,8 @@ def simulacion():
 
         env.run(until=T)
 
-        rep.fin_replica(estadistica.bodega_andina, estadistica.bodega_saladillo, estadistica.barcos_puerto, estadistica.camiones_t2)
+        rep.fin_replica(estadistica.bodega_andina, estadistica.bodega_saladillo, estadistica.barcos_puerto,
+                        estadistica.camiones_t2, puerto, estadistica.ocupacion_trenes)
         #print("tramo5", tramo5.traslado)
         #print("tramo5", tramo5.traslado_anual)
         #print("tramo4", tramo4.traslado)

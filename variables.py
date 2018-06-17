@@ -2,14 +2,14 @@
 author = 'menavarrete-rtacuna'
 
 # Caracteristicas simulacion
-name = "Version_definitiva"
+name = "Version_definitiva2"
 caracteristicas = "Version final de la simulacion"
 
 # Tiempo simulacion
 anos = 8
 
 # Replicas
-replicas = 100
+replicas = 10
 
 # Fundicion ventanas
 ventanas_name = "Fundicion Ventanas"
@@ -72,3 +72,6 @@ programacion2 = {1: [12], 2: [10, 22], 3: [1, 16, 25], 4: [1, 10, 22, 25], 5: [1
 
 # Necesidad de embarque anual
 ea = [905, 982, 1039, 696, 602, 407, 527, 527]
+
+# Puntos de carga
+puntos_de_carga = [7000, 20000]

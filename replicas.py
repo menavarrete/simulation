@@ -1,5 +1,6 @@
 import os
 from variables import *
+import numpy as np
 
 author = "rtacuna"
 
@@ -15,14 +16,30 @@ class Replicas:
         self.puerto_fin = []
         self.camiones = []
         self.camiones_fin = []
+        self.barcos_parcialmente = []
+        self.barcos_perdidos = []
+        self.ocupacion_barcos = []
+        self.ocupacion_trenes = []
         self.name = name
         self.file3 = ""
 
-    def fin_replica(self, andina, saladillo, puerto, camiones):
+    def fin_replica(self, andina, saladillo, puerto, camiones, puerto2, trenes):
         self.bodega_andina.append(andina)
         self.bodega_saladillo.append(saladillo)
         self.puerto.append(puerto)
         self.camiones.append(camiones)
+        self.barcos_parcialmente.append(puerto2.barco_parcialmente)
+        self.barcos_perdidos.append(puerto2.barco_perdido)
+        self.promedio_ocupacion_barco_replica(puerto2.barcos_salen)
+        self.promedio_ocupacion_trenes_replica(trenes)
+
+    def promedio_ocupacion_trenes_replica(self, ocupacion):
+        suma = sum(ocupacion)
+        self.ocupacion_trenes.append(suma/len(ocupacion))
+
+    def promedio_ocupacion_barco_replica(self, ocupacion):
+        suma = sum(ocupacion)
+        self.ocupacion_barcos.append(suma/len(ocupacion))
 
     def promedio_andina(self):
         largo = len(self.bodega_andina[0])
@@ -66,7 +83,6 @@ class Replicas:
             n = sorted(n)
             suma += n[2890]
             file.write(str(indice)+","+str(n[2890])+"\n")
-            print(str(indice)+","+str(n[2890]))
         nueva_lista = sorted(nueva_lista)
         indice = int(0.99*len(nueva_lista))
         file.write("Total,"+str(nueva_lista[indice]))
@@ -75,9 +91,33 @@ class Replicas:
         print("Total,"+str(nueva_lista[indice]))
         print("Total2", suma/len(self.bodega_andina))
 
+    def desempeno_tramo2(self):
+        self.file3.write("PROMEDIO TRENES: " + str(np.mean(self.ocupacion_trenes)) + '\n')
+        self.file3.write("DESVIACION TRENES: " + str(np.std(self.ocupacion_trenes)) + '\n')
+
+    def desempeno_barco(self):
+        self.file3.write("PROMEDIO BARCOS PERDIDOS: " + str(np.mean(self.barcos_perdidos)) + '\n')
+        self.file3.write("DESVIACION BARCOS PERDIDOS: " + str(np.std(self.barcos_perdidos)) + '\n')
+
+        self.file3.write("PROMEDIO BARCOS PARCIALMENTE: " + str(np.mean(self.barcos_parcialmente)) + '\n')
+        self.file3.write("DESVIACION BARCOS PARCIALMENTE: " + str(np.std(self.barcos_parcialmente)) + '\n')
+
+        self.file3.write("PROMEDIO OCUPACION BARCOS: " + str(np.mean(self.ocupacion_barcos)) + '\n')
+        self.file3.write("DESVIACION OCUPACION BARCOS: " + str(np.std(self.ocupacion_barcos)) + '\n')
+
     def visualizacion(self):
         if not os.path.exists("resultados/"+self.name):
             os.makedirs("resultados/"+self.name)
+
+        andina_total = open('resultados/'+self.name+'/bodega_andina_total.csv', 'w')
+        for n in self.bodega_andina:
+            for i in n:
+                andina_total.write(str(i) + '\n')
+
+        camiones2_total = open('resultados/'+self.name+'/camionest2_total.csv', 'w')
+        for n in self.camiones:
+            for i in n:
+                camiones2_total.write(str(i) + '\n')
 
         file2 = open('resultados/'+self.name+'/bodega_andina.csv', 'w')
         for i in self.bodega_andina_fin:
@@ -100,6 +140,7 @@ class Replicas:
         self.file3.write("REPLICAS: "+str(replicas) + '\n')
         self.file3.write("CARACTERISTICAS: " + str(caracteristicas) + '\n')
         self.file3.write("PROGRAMACION BARCOS: " + str(programacion) + '\n')
+        self.file3.write("CAPACIDADES PUNTOS DE CARGA: " + str(puntos_de_carga) + '\n')
 
     def end(self):
         self.promedio_andina()
@@ -107,4 +148,6 @@ class Replicas:
         self.promedio_barcos()
         self.promedio_camiones()
         self.visualizacion()
+        self.desempeno_barco()
+        self.desempeno_tramo2()
         self.calculo_percentil()

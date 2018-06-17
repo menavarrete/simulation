@@ -22,6 +22,8 @@ def produccion_saladillo(env, bodega, bodega2, puerto, tramo2, est):
         puerto.carga_diaria = 0
         puerto.tiempo = 24
 
+        puerto.nuevo_dia()
+
         yield env.timeout(24)
 
 

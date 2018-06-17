@@ -8,25 +8,30 @@ def angloamerica():
     return Barco(capacidad, 2)
 
 
-def carga_barco(env, puerto, bodega):
+def carga_barco(env, puerto, bodega, embarque):
     while True:
-        if len(puerto.barcos) > 0:
-            if puerto.barcos[0].tipo == 1:
-                carga = min(7000-puerto.carga_diaria, puerto.barcos[0].capacidad - puerto.barcos[0].carga, bodega.bodega,
-                            puerto.necesidad_embarco - puerto.carga_actual)
-                puerto.cargando_barco(carga)
+        if len(puerto.barcos) > 0 or embarque.barco:
+            if not embarque.barco:
+                embarque.barco = puerto.barcos.pop(0)
+            salida = 0
+            if embarque.barco.tipo == 1:
+                carga = min(embarque.capacidad-embarque.carga_diaria, embarque.barco.capacidad - embarque.barco.carga,
+                            bodega.bodega, puerto.necesidad_embarco - puerto.carga_actual)
+                if bodega.bodega == 0:
+                    salida = 1
+                    puerto.barco_parcialmente += 1
+                puerto.cargando_barco(carga, embarque)
                 bodega.cambia_cobre(-carga)
             else:
-                carga = min(7000-puerto.carga_diaria, puerto.barcos[0].capacidad - puerto.barcos[0].carga)
+                carga = min(embarque.capacidad-embarque.carga_diaria, embarque.barco.capacidad - embarque.barco.carga)
                 puerto.carga_diaria += carga
 
-            tiempo = puerto.calculo_tiempo(carga)
-            if puerto.barcos[0].carga == puerto.barcos[0].capacidad or puerto.carga_actual >= puerto.necesidad_embarco:
-                # print("SALIENDO BARCO ", puerto.barcos[0].carga)
-                puerto.salida_barco()
+            tiempo = embarque.calculo_tiempo(carga)
+            if embarque.barco.carga == embarque.barco.capacidad or puerto.carga_actual >= puerto.necesidad_embarco or salida == 1:
+                puerto.salida_barco(embarque)
 
             if carga == bodega.bodega or tiempo == 0:
-                nuevo_tiempo = max(1, puerto.tiempo)
+                nuevo_tiempo = max(1, embarque.tiempo)
                 yield env.timeout(nuevo_tiempo)
             else:
                 yield env.timeout(tiempo)
@@ -39,6 +44,7 @@ def llega_barco(env, puerto, bodega, barco):
     puerto.llegada_barco(barco)
     if bodega.bodega == 0 and type == 1:
         puerto.salida_barco()
+        puerto.barco_perdido += 1
 
 
 def programacion_barcos(env, dia, puerto, bodega, capacidad):

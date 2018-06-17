@@ -1,4 +1,7 @@
 from random import expovariate
 
-for n in range(10):
-    print(expovariate(0.00416)/24)
+lista = [1,2,3,4,5]
+
+suma = sum(lista)
+
+print(suma)

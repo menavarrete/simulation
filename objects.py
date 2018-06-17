@@ -96,31 +96,65 @@ class Puerto:
         # Angloamerica
         self.angloamerica = 0
 
+        # Barcos que se van porque no hay cobre
+        self.barco_parcialmente = 0
+
+        # Porcentaje utilizacion barcos
+        self.barcos_salen = []
+
+        # Barco que se va en cero
+        self.barco_perdido = 0
+
+        # Lista puntos de carga
+        self.puntos_carga = []
+
     def llegada_barco(self, barco):
         self.barcos.append(barco)
         if barco.tipo == 2:
             self.angloamerica += 1
 
-    def salida_barco(self):
-        barco = self.barcos.pop(0)
+    def salida_barco(self, embarque):
+        barco = embarque.barco
         if barco.tipo == 2:
             self.angloamerica -= 1
+        else:
+            self.barcos_salen.append(barco.carga/barco.capacidad)
+        embarque.barco = None
 
-    def cargando_barco(self, carga):
-        self.sacado += carga
-        self.carga_diaria += carga
+    def cargando_barco(self, carga, embarque):
+        embarque.carga_diaria += carga
         self.carga_actual += carga
+
+    def nuevo_dia(self):
+        for n in self.puntos_carga:
+            n.nuevo_dia()
+
+
+class Embarque:
+
+    def __init__(self, capacidad):
+        self.barco = None
+        self.capacidad = capacidad
+        self.carga_diaria = 0
+        self.tiempo = 24
+
+    def cargando(self, carga):
+        self.carga_diaria += carga
+        if self.carga_diaria > self.capacidad:
+            raise AttributeError
+
+    def nuevo_dia(self):
+        self.tiempo = 24
+        self.carga_diaria = 0
+
+    def llega_barco(self, barco):
+        self.barco = barco
+
+    def sale_barco(self):
+        self.barco = None
 
     def calculo_tiempo(self, carga):
         tiempo = int((carga / 7000) * 24)
         self.tiempo -= tiempo
-        self.barcos[0].llenar_barco(carga)
+        self.barco.llenar_barco(carga)
         return tiempo
-
-
-class Tren:
-
-    def __init__(self, carga, ruta):
-        self.carga = carga
-        self.ruta = ruta
-        self.tiempo_llegada = 0

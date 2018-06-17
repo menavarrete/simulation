@@ -9,6 +9,7 @@ class Estadistica:
         self.camiones_t2 = []
         self.error_bodega = 0
         self.barcos_puerto = []
+        self.ocupacion_trenes = []
 
     def promedios(self):
         suma1 = 0
@@ -19,6 +20,9 @@ class Estadistica:
             suma2 += n
         self.bodega_saladillo.append(suma1/len(self.bodega_saladillo_hora))
         self.bodega_andina.append(suma2/len(self.bodega_andina_hora))
+
+    def ocupacion_trenes_calculo(self, carga):
+        self.ocupacion_trenes.append(carga/740)
 
     def nuevo_dia(self, saladillo, andina):
 
