@@ -2,14 +2,14 @@
 author = 'menavarrete-rtacuna'
 
 # Caracteristicas simulacion
-name = "Version_definitiva2"
+name = "Dos puntos de carga puerto"
 caracteristicas = "Version final de la simulacion"
 
 # Tiempo simulacion
 anos = 8
 
 # Replicas
-replicas = 10
+replicas = 100
 
 # Fundicion ventanas
 ventanas_name = "Fundicion Ventanas"
@@ -75,3 +75,6 @@ ea = [905, 982, 1039, 696, 602, 407, 527, 527]
 
 # Puntos de carga
 puntos_de_carga = [7000, 20000]
+
+# Cantidad cobre inicial bodega puerto
+estado_inicial_puerto = 0

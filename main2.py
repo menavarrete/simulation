@@ -37,7 +37,7 @@ def simulacion():
             carga = Embarque(n)
             puerto.puntos_carga.append(carga)
 
-        # andina_bodega.bodega = 10000
+        andina_bodega.bodega = estado_inicial_puerto
 
         # Tramos
         tramo5 = Camino(tramo5_name, tramo5_travel_time, teniente_source, andina_bodega, tramo5_camiones[0], tramo5_proyeccion[0])
